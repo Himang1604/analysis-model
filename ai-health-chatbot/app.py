@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, jsonify
 from agents.risk_analyzer import RiskAnalyzer
+from agents.recommendation_agent import RecommendationAgent
 import json
 
 app = Flask(__name__)
 analyzer = RiskAnalyzer()
+recommendation_agent = RecommendationAgent()
 
 def get_web_condition_data(condition):
     """Fetch condition data from web API"""
@@ -74,6 +76,21 @@ def final_analysis():
     for condition in final_analysis['potential_conditions']:
         final_analysis['condition_details'] = final_analysis.get('condition_details', {})
         final_analysis['condition_details'][condition] = get_web_condition_data(condition)
+    
+    # Generate recommendations
+    conditions = {
+        'conditions': list(final_analysis['potential_conditions'].keys()),
+        'details': final_analysis.get('condition_details', {})
+    }
+    
+    risk_analysis = {
+        'risk_level': 'high' if any(score > 0.7 for score in final_analysis['potential_conditions'].values()) else
+                     'medium' if any(score > 0.4 for score in final_analysis['potential_conditions'].values()) else
+                     'low'
+    }
+    
+    recommendations = recommendation_agent.generate_recommendations(conditions, risk_analysis)
+    final_analysis['recommendations'] = recommendations
     
     return jsonify({
         'status': 'success',

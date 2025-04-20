@@ -154,6 +154,45 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show final results
         finalResults.classList.remove('hidden');
         followUp.classList.add('hidden');
+
+        // After a short delay, show recommendations and motivational message
+        setTimeout(() => {
+            const recommendations = analysis.recommendations || {};
+            const recommendationsSection = document.createElement('div');
+            recommendationsSection.className = 'recommendations-container';
+            recommendationsSection.innerHTML = `
+                <div class="recommendations-section">
+                    <h3>Recommendations</h3>
+                    <ul class="recommendations-list">
+                        ${(recommendations.specific_recommendations || []).map(rec => `<li>${rec}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="health-tips-section">
+                    <h3>Health Tips</h3>
+                    <ul class="health-tips-list">
+                        ${(recommendations.health_tips || []).map(tip => `<li>${tip}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="motivational-message">
+                    <h3>Message of Support</h3>
+                    <p>${recommendations.motivational_message || ''}</p>
+                </div>
+            `;
+
+            finalResults.appendChild(recommendationsSection);
+            
+            // Add animation
+            recommendationsSection.style.opacity = '0';
+            recommendationsSection.style.transform = 'translateY(20px)';
+            recommendationsSection.style.transition = 'all 0.5s ease-out';
+            
+            setTimeout(() => {
+                recommendationsSection.style.opacity = '1';
+                recommendationsSection.style.transform = 'translateY(0)';
+            }, 100);
+        }, 500);
     }
 
     // Reset analysis
