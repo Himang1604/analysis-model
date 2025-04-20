@@ -1,0 +1,12 @@
+[build]
+  command = "pip install -r requirements.txt"
+  functions = "functions"
+  publish = "static"
+
+[functions]
+  included_files = ["utils/**", "agents/**", "data/**"]
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200 

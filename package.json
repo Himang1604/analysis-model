@@ -1,0 +1,12 @@
+{
+  "name": "health-chatbot",
+  "version": "1.0.0",
+  "description": "Health Chatbot with Netlify Functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "netlify-lambda": "^2.0.15"
+  }
+} 
